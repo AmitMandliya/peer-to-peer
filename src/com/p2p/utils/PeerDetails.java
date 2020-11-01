@@ -1,4 +1,4 @@
-package com.p2p.server;
+package com.p2p.utils;
 
 public class PeerDetails {
     // the hostname of the peer (of type string)
