@@ -4,13 +4,23 @@ public class RFCDetails {
     int rfcNumber;
     String rfcTitle;
     String peerHostname;
-    int clientPortNumber;
+    int peerServerPortNumber;
+    int peerPortNum;
 
-    public RFCDetails(int rfcNumber, String rfcTitle, String peerHostname, int clientPortNumber) {
+    public RFCDetails(int rfcNumber, String rfcTitle, String peerHostname, int peerServerPortNumber, int peerPortNum) {
         this.rfcNumber = rfcNumber;
         this.rfcTitle = rfcTitle;
         this.peerHostname = peerHostname;
-        this.clientPortNumber = clientPortNumber;
+        this.peerServerPortNumber = peerServerPortNumber;
+        this.peerPortNum = peerPortNum;
+    }
+
+    public int getPeerPortNum() {
+        return peerPortNum;
+    }
+
+    public void setPeerPortNum(int peerPortNum) {
+        this.peerPortNum = peerPortNum;
     }
 
     public int getRfcNumber() {
@@ -37,11 +47,11 @@ public class RFCDetails {
         this.peerHostname = peerHostname;
     }
 
-    public int getClientPortNumber() {
-        return clientPortNumber;
+    public int getPeerServerPortNumber() {
+        return peerServerPortNumber;
     }
 
-    public void setClientPortNumber(int clientPortNumber) {
-        this.clientPortNumber = clientPortNumber;
+    public void setPeerServerPortNumber(int peerServerPortNumber) {
+        this.peerServerPortNumber = peerServerPortNumber;
     }
 }

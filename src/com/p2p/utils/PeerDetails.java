@@ -1,9 +1,7 @@
 package com.p2p.utils;
 
 public class PeerDetails {
-    // the hostname of the peer (of type string)
     String peerHostname;
-    // the port number (of type integer) to which the upload server of this peer is listening.
     int peerPortNumber;
 
     public String getPeerHostname() {

@@ -10,9 +10,9 @@ import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class Peer implements Runnable{
-    private static final String version = "P2P-CI/1.0";
     public static List<RFCDetails> rfcs = Collections.synchronizedList(new ArrayList());
     public ServerSocket peerServerSocket;
     private static Socket clientSocket;
@@ -21,6 +21,7 @@ public class Peer implements Runnable{
     private static String serverAddress,hostName;
     private static int clientPort, peerServerPortNumber, serverPortNumber ;
     private static String localResourcesPath = "resources/localRFCs";
+    private static final String version = "P2P-CI/1.0";
 
     public Peer(int peerPort) {
         try {
@@ -103,9 +104,6 @@ public class Peer implements Runnable{
                         break;
                 }
             }
-
-            //sendClientRequest(InetAddress.getByName(serverAddress), hostName, objectOutputStream, objectInputStream, peerServerPortNumber, clientPort);
-
         } catch (IOException e) {
             System.err.print("IOException");
             e.printStackTrace();
@@ -124,7 +122,12 @@ public class Peer implements Runnable{
             objectOutputStreamPeerClient.writeObject(requestQuery);
             String peerResponse = (String) objectInputStreamPeerClient.readObject();
             String[] peerResponseArray = peerResponse.split("\r\n");
-            System.out.println(Arrays.toString(peerResponseArray));
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < peerResponseArray.length-1; i++) {
+                builder.append(peerResponseArray[i]);
+                builder.append("\r\n");
+            }
+            System.out.println(builder.toString());
             String peerVersion = peerResponseArray[0].split(" ")[0];
             int peerStatus = Integer.parseInt(peerResponseArray[0].split(" ")[1].trim());
             String peerPhrase = peerResponseArray[0].split(" ")[2];
@@ -145,6 +148,8 @@ public class Peer implements Runnable{
                 FileWriter fileWriter = new FileWriter(downloadedRFC.getAbsolutePath());
                 fileWriter.write(data);
                 fileWriter.close();
+                System.out.println("RFC has been downloaded. Date = "+Date+", peerOS = "+peerOS+", lastModified = "+lastModified
+                        +", contentLength = "+contentLength+", contentType = "+contentType);
             }
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("Error while connecting with peer.");
@@ -198,6 +203,7 @@ public class Peer implements Runnable{
                         "Port: "+peerServerPortNumber+"\r\n"+
                         "Title: "+rfcTitle+"\r\n";
                 objectOutputStream.writeObject(requestToServer);
+                objectOutputStream.writeObject(clientPort);
                 String serverResponse = (String) objectInputStream.readObject();
                 System.out.println(serverResponse);
             }

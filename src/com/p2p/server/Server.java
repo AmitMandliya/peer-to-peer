@@ -16,16 +16,18 @@ public class Server implements Runnable{
     public static List<PeerDetails> peers;
     public int serverPortNumber;
     public ServerSocket serverSocket;
-    private static final String version = "P2P-CI/1.0";
+    private static String version = "";
 
     public Server() throws IOException {
         this.serverPortNumber = 7734;
-        this.rfcs = Collections.synchronizedList(new ArrayList<RFCDetails>());
-        this.peers = Collections.synchronizedList(new ArrayList<PeerDetails>());
+        version = "P2P-CI/1.0";
+        rfcs = Collections.synchronizedList(new ArrayList<RFCDetails>());
+        peers = Collections.synchronizedList(new ArrayList<PeerDetails>());
+        System.out.println("Initializing Server...");
         this.serverSocket = new ServerSocket(serverPortNumber);
-        System.out.println("Centralized Server running at "+ InetAddress.getLocalHost().getHostAddress()+ " on port " + serverSocket.getLocalPort());
-        System.out.println("OS: " + System.getProperty("os.name"));
-        System.out.println("Version: P2P-CI/1.0");
+        System.out.println("Server up at "+ InetAddress.getLocalHost().getHostAddress()+ ", Port = " + serverSocket.getLocalPort());
+        System.out.println("Version = P2P-CI/1.0, OS = " + System.getProperty("os.name"));
+        System.out.println();
         new Thread(this).start();
     }
 
@@ -38,29 +40,33 @@ public class Server implements Runnable{
         Socket socket = null;
         ObjectInputStream objectInputStream;
         ObjectOutputStream objectOutputStream;
-        String hostname;
+        String clientHostname;
         int clientPort = 0;
         try {
             socket = serverSocket.accept();
             new Thread(this).start();
             clientPort = socket.getPort();
-            System.out.println("Connection Established with client @ port "+ clientPort);
             objectInputStream = new ObjectInputStream (socket.getInputStream());
             objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-            hostname = (objectInputStream.readObject()).toString();
-            PeerDetails peerDetails = new PeerDetails(hostname, clientPort);
+            clientHostname = (objectInputStream.readObject()).toString();
+            PeerDetails peerDetails = new PeerDetails(clientHostname, clientPort);
             peers.add(peerDetails);
-            System.out.println("Peer Added successfully");
+            System.out.println("Peer has joined with system with Hostname = "+clientHostname+", Port = "+ clientPort);
         } catch(Exception e) {
-            System.out.println("Connection failure at start " + e);
-            if (socket.isConnected())
-            {
-                removePeer(clientPort, false);
-                try {
-                    socket.close();
-                } catch(IOException ioe){
-                    System.out.println("IOException in closing connection" + e);
+            System.out.println("Exception occurred during connection with Peer.");
+            try {
+                if (socket.isConnected()) {
+                    int finalClientPort = clientPort;
+                    peers.removeIf(peer -> peer.getPeerPortNumber() == finalClientPort);
+                    rfcs.removeIf(rfc -> rfc.getPeerPortNum() == finalClientPort);
+                    try {
+                        socket.close();
+                    } catch (IOException ioe) {
+                        System.out.println("IOException in closing connection" + ioe);
+                    }
                 }
+            } catch (NullPointerException e1) {
+                System.out.println("Socket is not available");
             }
             return;
         }
@@ -74,8 +80,10 @@ public class Server implements Runnable{
             try {
                 requestFromClient = (String) objectInputStream.readObject();
             } catch (Exception e) {
-                // TODO: remove peer
-                System.out.println("Connection is reset for client "+hostname+" port = "+clientPort+", removing it.");
+                int finalClientPort = clientPort;
+                peers.removeIf(peer -> peer.getPeerPortNumber() == finalClientPort);
+                rfcs.removeIf(rfc -> rfc.getPeerPortNum() == finalClientPort);
+                System.out.println("Connection is reset for client "+clientHostname+" port = "+clientPort+", removing it.");
                 break;
             }
             System.out.println("Server is processing below request:");
@@ -90,7 +98,15 @@ public class Server implements Runnable{
             }
             switch (command) {
                 case "ADD":
-                    addRFCDetails(rfcNumber, rfcTitle, peerHostname, clientPortNumber, objectOutputStream);
+                    int clientPortNum = 0;
+                    try {
+                        clientPortNum = (int) objectInputStream.readObject();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    addRFCDetails(rfcNumber, rfcTitle, peerHostname, clientPortNumber, clientPortNum, objectOutputStream);
                     break;
                 case "LIST":
                     listAllRFCDetails(objectOutputStream);
@@ -108,7 +124,7 @@ public class Server implements Runnable{
         StringBuilder serverResponse = new StringBuilder();
         serverResponse.append(version+" 200 OK\r\n");
         for(RFCDetails rfcDetails: rfcs) {
-            serverResponse.append(rfcDetails.getRfcNumber()+" "+rfcDetails.getRfcTitle()+" "+rfcDetails.getPeerHostname()+" "+rfcDetails.getClientPortNumber()+"\r\n");
+            serverResponse.append(rfcDetails.getRfcNumber()+" "+rfcDetails.getRfcTitle()+" "+rfcDetails.getPeerHostname()+" "+rfcDetails.getPeerServerPortNumber()+"\r\n");
         }
         serverResponse.append("\r\n");
         try {
@@ -127,7 +143,7 @@ public class Server implements Runnable{
                     isRFCAvailable = true;
                     serverResponse.append(version+" 200 OK"+"\r\n");
                 }
-                serverResponse.append("RFC "+rfcDetails.getRfcNumber()+" "+rfcDetails.getRfcTitle()+" "+rfcDetails.getPeerHostname()+" "+rfcDetails.getClientPortNumber());
+                serverResponse.append("RFC "+rfcDetails.getRfcNumber()+" "+rfcDetails.getRfcTitle()+" "+rfcDetails.getPeerHostname()+" "+rfcDetails.getPeerServerPortNumber()+"\r\n");
             }
         }
         if(!isRFCAvailable) {
@@ -140,43 +156,17 @@ public class Server implements Runnable{
         }
     }
 
-    private void addRFCDetails(int rfcNumber, String rfcTitle, String peerHostname, int clientPortNumber, ObjectOutputStream objectOutputStream) {
-        rfcs.add(new RFCDetails(rfcNumber,rfcTitle,peerHostname,clientPortNumber));
+    private void addRFCDetails(int rfcNumber, String rfcTitle, String peerHostname, int clientPortNumber, int peerPortNum, ObjectOutputStream objectOutputStream) {
+        rfcs.add(new RFCDetails(rfcNumber,rfcTitle,peerHostname,clientPortNumber, peerPortNum));
         try {
             objectOutputStream.writeObject("RFCDetails added successfully");
         } catch (IOException e) {
+            int finalClientPort = clientPortNumber;
+            peers.removeIf(peer -> peer.getPeerPortNumber() == finalClientPort);
+            rfcs.removeIf(rfc -> rfc.getPeerServerPortNumber() == finalClientPort);
             System.out.println("Error in sending update to client.");
             e.printStackTrace();
         }
         System.out.println("RFCDetails added successfully");
     }
-
-    private void removePeer(int clientPort, boolean flag) {
-        if(flag){
-            RFCDetails listOne = null;
-            int index = 0;
-
-            while(index < rfcs.size()) {
-                listOne = rfcs.get(index);
-                if(clientPort == listOne.getClientPortNumber()) {
-                    rfcs.remove(index);
-                    index = 0;
-                    continue;
-                }
-                index += 1;
-            }
-        }
-        try {
-            ListIterator<PeerDetails> piterator = peers.listIterator();
-            PeerDetails peerOne = null;
-            while((piterator.hasNext()))
-            {
-                peerOne = piterator.next();
-                if(clientPort == peerOne.getPeerPortNumber()){
-                    peers.remove(peerOne);
-                }
-            }
-        } catch (ConcurrentModificationException e) {}
-    }
-
 }
