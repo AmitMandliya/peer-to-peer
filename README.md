@@ -1,8 +1,5 @@
 # peer-to-peer
-peer-to-peer
-
-
-
+A (P2P) system with a centralized index (CI). Peers can join the system and share files (RFC text files) directly with each other. The centralized server is responsible for keeping a track what files each Peer and files it has.
 
 ## instructions to run the project:
 The code has been tested on Windows 10 with Java 8 environment.
