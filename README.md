@@ -1,4 +1,4 @@
-# peer-to-peer
+# Peer-to-Peer File sharing system
 A console based Peer to Peer (P2P) file sharing system with a centralized index (CI). Peers can join the system and share files (RFC text files) directly with each other. The centralized server is responsible for keeping a track what files each Peer and files it has.
 
 ## Instructions to run the project:
