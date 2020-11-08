@@ -26,10 +26,17 @@ Version = P2P-CI/1.0, OS = Windows 10
 ```
 Use the IP address (Here, 192.168.0.14) to start the Peer.
 
-2. Peer can choose from one of the following option:
-a. ADD: This adds the rfc file details to the List maintained by the Server. Simply type "ADD" and Enter. Post that, Type the name of the RFC (i.e. number of RFC, for example 4) it has in the src/resources/localRFCs folder. If the RFC is present in that folder (RFC name should be like rfc4.txt, 4 represents the number you had put earlier), then Server will add the details. If the RFC is not present at Peer end, then 400 Bad Request will be raised and printed on console.
-b. LIST: This will list all the RFC details and the peer details which has those files. (This list is maintained by Centralized Server).
-c. LOOKUP: If a Peer wants to look up a particular RFC it is interested in, then it can give the name of the RFC (i.e. the number, for example 4). A list will be returned by the server which contains details of all the Peers which has this file and have ADDed its details into the system.
-d. GET: If a Peer wants to GET a RFC from other Peers, it can simply raise a GET request and give the hostname and port number of the Peer it want to get the RFC from. Note that, these details can be obtained from the Lookup operation.
-e. QUIT: A peer can Quit the system. When, it quits, the Server will remove all the RFC details from the List maintained by it. 
+2. This project does not allow spaces to be entered in the Title of the RFC.
+
+3. Peer can choose from one of the following option: <br>
+
+a. ADD: This adds the rfc file details to the List maintained by the Server. Simply type "ADD" and Enter. Post that, Type the name of the RFC (i.e. number of RFC, for example 4) it has in the src/resources/localRFCs folder. If the RFC is present in that folder (RFC name should be like rfc4.txt, 4 represents the number you had put earlier), then Server will add the details. If the RFC is not present at Peer end, then 400 Bad Request will be raised and printed on console. <br>
+
+b. LIST: This will list all the RFC details and the peer details which has those files. (This list is maintained by Centralized Server). <br>
+
+c. LOOKUP: If a Peer wants to look up a particular RFC it is interested in, then it can give the name of the RFC (i.e. the number, for example 4). A list will be returned by the server which contains details of all the Peers which has this file and have ADDed its details into the system. <br>
+
+d. GET: If a Peer wants to GET a RFC from other Peers, it can simply raise a GET request and give the hostname and port number of the Peer it want to get the RFC from. Note that, these details can be obtained from the Lookup operation. <br>
+
+e. QUIT: A peer can Quit the system. When, it quits, the Server will remove all the RFC details from the List maintained by it. <br>
 
