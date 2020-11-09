@@ -109,7 +109,13 @@ Port: 8033
 Title: Host_Software
 ```
   * GET: If a Peer wants to GET a RFC from other Peers, it can simply raise a GET request and give the hostname and port number of the Peer it want to get the RFC from. Note that, these details can be obtained from the Lookup operation. <br>
-  Peer end:
+Peer Server end:
+```
+GET RFC 3 P2P-CI/1.0
+Host: 192.168.0.14
+OS: Windows 10
+```
+  Peer Client end:
   ```
   Select from: ADD, LOOKUP, LIST, GET, QUIT
 GET
