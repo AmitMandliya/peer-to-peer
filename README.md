@@ -90,7 +90,24 @@ Host: 192.168.0.14
 Port: 8033
 ```
   * LOOKUP: If a Peer wants to look up a particular RFC it is interested in, then it can give the name of the RFC (i.e. the number, for example 4). A list will be returned by the server which contains details of all the Peers which has this file and have ADDed its details into the system. <br>
-
+Peer end:
+```
+Select from: ADD, LOOKUP, LIST, GET, QUIT
+LOOKUP
+Enter the RFC Name and RFC Title to be looked up (separated by space)
+1 Host_Software
+P2P-CI/1.0 200 OK
+RFC 1 Host_Software 192.168.0.14 10726
+RFC 1 Host_Software 192.168.0.14 12460
+```
+Server end:
+```
+Server is processing below request:
+LOOKUP RFC 1 P2P-CI/1.0
+Host: 192.168.0.14
+Port: 8033
+Title: Host_Software
+```
   * GET: If a Peer wants to GET a RFC from other Peers, it can simply raise a GET request and give the hostname and port number of the Peer it want to get the RFC from. Note that, these details can be obtained from the Lookup operation. <br>
 
   * QUIT: A peer can Quit the system. When, it quits, the Server will remove all the RFC details from the List maintained by it. <br>
