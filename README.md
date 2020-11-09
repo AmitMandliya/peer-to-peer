@@ -109,6 +109,21 @@ Port: 8033
 Title: Host_Software
 ```
   * GET: If a Peer wants to GET a RFC from other Peers, it can simply raise a GET request and give the hostname and port number of the Peer it want to get the RFC from. Note that, these details can be obtained from the Lookup operation. <br>
+  Peer end:
+  ```
+  Select from: ADD, LOOKUP, LIST, GET, QUIT
+GET
+Enter the RFC Name to be downloaded and Hostname and Port number of the host where this RFC is present (separated by space)
+1 192.168.0.14 12460
+P2P-CI/1.0 200 OK
+Date: Sun, 08 Nov 2020 21:45:45 GMT
+OS: Windows 10
+Last Modified: Sat, 31 Oct 2020 19:44:56
+Content-Length: 21088
+Content-Type: text/text
+
+RFC has been downloaded. Date =  Sun, 08 Nov 2020 21, peerOS =  Windows 10, lastModified =  Sat, 31 Oct 2020 19, contentLength =  21088, contentType =  text/text
+```
 
   * QUIT: A peer can Quit the system. When, it quits, the Server will remove all the RFC details from the List maintained by it. <br>
 
