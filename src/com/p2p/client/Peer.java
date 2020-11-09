@@ -254,6 +254,7 @@ public class Peer implements Runnable{
             objectOutputStreamPeer = new ObjectOutputStream(socket.getOutputStream());
             objectInputStreamPeer = new ObjectInputStream(socket.getInputStream());
             String peerRequest = (String) objectInputStreamPeer.readObject();
+            System.out.println(peerRequest);
             String[] peerRequestArray = peerRequest.split("\r\n");
             String method = peerRequestArray[0].split(" ")[0];
             String peerHostname = peerRequestArray[1].split(":")[1];
