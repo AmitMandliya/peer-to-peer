@@ -74,7 +74,21 @@ src\resources\localRFCs\rfc10.txt does not exists. Cannot add RFC details to Ser
 Error: 404 Not Found
 ```
   * LIST: This will list all the RFC details and the peer details which has those files. (This list is maintained by Centralized Server). <br>
-
+Peer end:
+```
+Select from: ADD, LOOKUP, LIST, GET, QUIT
+LIST
+P2P-CI/1.0 200 OK
+1 Host_Software 192.168.0.14 10726
+2 test 192.168.0.14 10726
+```
+Server end:
+```
+Server is processing below request:
+LIST ALL RFC P2P-CI/1.0
+Host: 192.168.0.14
+Port: 8033
+```
   * LOOKUP: If a Peer wants to look up a particular RFC it is interested in, then it can give the name of the RFC (i.e. the number, for example 4). A list will be returned by the server which contains details of all the Peers which has this file and have ADDed its details into the system. <br>
 
   * GET: If a Peer wants to GET a RFC from other Peers, it can simply raise a GET request and give the hostname and port number of the Peer it want to get the RFC from. Note that, these details can be obtained from the Lookup operation. <br>
