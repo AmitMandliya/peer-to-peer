@@ -126,4 +126,13 @@ RFC has been downloaded. Date =  Sun, 08 Nov 2020 21, peerOS =  Windows 10, last
 ```
 
   * QUIT: A peer can Quit the system. When, it quits, the Server will remove all the RFC details from the List maintained by it. <br>
-
+Server end:
+```
+Connection is reset for client 192.168.0.14 port = 59811, removing it.
+```
+Peer end:
+```
+Select from: ADD, LOOKUP, LIST, GET, QUIT
+QUIT
+Quitting.
+```
