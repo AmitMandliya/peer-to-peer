@@ -46,7 +46,33 @@ Peer has joined with system with Hostname = 192.168.0.14, Port = 59792
 3. Peer can choose from one of the following option: <br>
 
   * ADD: This adds the rfc file details to the List maintained by the Server. Simply type "ADD" and Enter. Post that, Type the name of the RFC (i.e. number of RFC, for example 4) it has in the src/resources/localRFCs folder. If the RFC is present in that folder (RFC name should be like rfc4.txt, 4 represents the number you had put earlier), then Server will add the details. If the RFC is not present at Peer end, then 400 Bad Request will be raised and printed on console. <br>
+Peer end:
+```
+Select from: ADD, LOOKUP, LIST, GET, QUIT
+ADD
+Enter the RFC Name and RFC Title to be added (separated by space)
+1 Host_Software
+RFCDetails added successfully
+```
+Server end:
+```
+Server is processing below request:
+ADD RFC 1 P2P-CI/1.0
+Host: 192.168.0.14
+Port: 10726
+Title: Host_Software
 
+RFCDetails added successfully
+```
+If the file that Peer is trying to add is not available in src/resources/localRFCs folder, below error is displayed at Peer end:
+```
+Select from: ADD, LOOKUP, LIST, GET, QUIT
+ADD
+Enter the RFC Name and RFC Title to be added (separated by space)
+10 Unknown_File_Title
+src\resources\localRFCs\rfc10.txt does not exists. Cannot add RFC details to Server.
+Error: 404 Not Found
+```
   * LIST: This will list all the RFC details and the peer details which has those files. (This list is maintained by Centralized Server). <br>
 
   * LOOKUP: If a Peer wants to look up a particular RFC it is interested in, then it can give the name of the RFC (i.e. the number, for example 4). A list will be returned by the server which contains details of all the Peers which has this file and have ADDed its details into the system. <br>
