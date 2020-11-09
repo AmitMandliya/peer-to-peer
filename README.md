@@ -27,6 +27,20 @@ Version = P2P-CI/1.0, OS = Windows 10
 ```
 Use the IP address (Here, 192.168.0.14) to start the Peer.
 
+When a Peer joins the system: <br>
+Peer end:
+```
+Starting peer on Port Number = 8033, Host Address =  192.168.0.14
+Client started at hostName = 192.168.0.14 ,port = 59792
+Select from: ADD, LOOKUP, LIST, GET, QUIT
+```
+The first port number (Here 8033, is the Server maintained at Peer end's port number). The second port number (Here, 59792 is the port number through which it is connected with Centralized Server).
+
+Server end:
+```
+Peer has joined with system with Hostname = 192.168.0.14, Port = 59792
+```
+
 2. This project does not allow spaces to be entered in the Title of the RFC.
 
 3. Peer can choose from one of the following option: <br>
