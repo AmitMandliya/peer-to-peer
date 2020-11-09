@@ -16,6 +16,7 @@ The code has been tested on Windows 10 with Java 8 environment.
   javac com/p2p/client/Peer.java 
   java com/p2p/client/Peer <Server IP Address> 7734 
 ```
+Ignore the warnings that may come during the compilation step.
 
 Notes: 
 1. When you run the Server, you will get system details in below format: <br>
